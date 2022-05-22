@@ -6,7 +6,6 @@ const doc = {
     description: 'Contacts API',
   },
   // host: 'localhost:3000',
-  host: '',
   schemes: ['http'],
 };
 
