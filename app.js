@@ -1,7 +1,10 @@
 //set up mongoose
 const mongoose = require('mongoose');
-const { userInfo } = require('os');
 const Article = require('./Article');
+
+//misc
+const bodyParser = require('body-parser');
+const port = process.env.PORT || 3000;
 
 // setup express
 const express = require('express');
@@ -10,12 +13,24 @@ const app = express();
 // setup dotenv
 require('dotenv/config');
 
+
+
 mongoose.connect(process.env.MONGODB_URI, 
-() => { console.log("connected to DB")}, 
+() => console.log("connected to DB"), 
 e => console.error(e));
 
 
+app
+.use(bodyParser.json())
+.use('/', require('./routes'));
 
+//set the port and return the port number
+app.listen(port, () => {
+    console.log(`App listening on ${port}`)
+})
+
+
+//very simple and basic example of a post. 
 // run()
 // async function run(){
 //     const article = await Article.create({title: "any", copy: "any"})
