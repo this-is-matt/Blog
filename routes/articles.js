@@ -15,10 +15,7 @@ router
 .post('/', async (req, res) => {
     const article = new Article({
         title: req.body.title,
-        author: req.body.title,
-        aContactInfo: req.body.aContactInfo,
-        body: req.body.body,
-        date: req.body.date
+        copy: req.body.copy
     });
 
     try{

@@ -13,6 +13,9 @@ const app = express();
 // setup dotenv
 require('dotenv/config');
 
+//set up swagger
+const swaggerUI = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 
 mongoose.connect(process.env.MONGODB_URI, 
@@ -22,7 +25,9 @@ e => console.error(e));
 
 app
 .use(bodyParser.json())
+.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 .use('/', require('./routes'));
+
 
 //set the port and return the port number
 app.listen(port, () => {
