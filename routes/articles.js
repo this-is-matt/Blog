@@ -54,6 +54,24 @@ router
                 });
             });
     })
+    .delete('/:id', (req, res) =>{
+        const id = req.params.id;
+        Article.findByIdAndRemove(id)
+        .then(data => {
+            if (!data) {
+                res.status(404).send({
+                    message: `Cannot delete article with id=${id}.`
+                });
+            } else res.send({
+                message: "Article was deleted successfully."
+            });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error deleting Article with id=" + id
+            });
+        });
+})
 
 
 module.exports = router
