@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../Article');
+const {
+    articleValidation,
+    validationResult
+} = require('../validation');
 
 router
     .get('/', async (req, res) => {
@@ -14,7 +18,14 @@ router
             });
         }
     })
-    .post('/', async (req, res) => {
+    .post('/', articleValidation, async (req, res) => {
+        // I literally have no idea. I can't find any documentation  on this other than the code written below and i can't ever get it to work. I have no idea. as i am sure is evident.
+        // const errors = validationResult(req)
+        // if (!errors.isEmpty()) {
+        //     return res.status(422).json({
+        //         errors: errors.array()
+        //     })
+        // }
         const article = new Article({
             title: req.body.title,
             copy: req.body.copy
@@ -31,12 +42,10 @@ router
     })
     .put('/:id', (req, res) => {
         const id = req.params.id;
-        Article.findByIdAndUpdate(id, 
-            {
+        Article.findByIdAndUpdate(id, {
                 title: req.body.title,
                 copy: req.body.copy
-            }, 
-            {
+            }, {
                 useFindAndModify: false
             })
             .then(data => {
@@ -54,24 +63,24 @@ router
                 });
             });
     })
-    .delete('/:id', (req, res) =>{
+    .delete('/:id', (req, res) => {
         const id = req.params.id;
         Article.findByIdAndRemove(id)
-        .then(data => {
-            if (!data) {
-                res.status(404).send({
-                    message: `Cannot delete article with id=${id}.`
+            .then(data => {
+                if (!data) {
+                    res.status(404).send({
+                        message: `Cannot delete article with id=${id}.`
+                    });
+                } else res.send({
+                    message: "Article was deleted successfully."
                 });
-            } else res.send({
-                message: "Article was deleted successfully."
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: "Error deleting Article with id=" + id
+                });
             });
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error deleting Article with id=" + id
-            });
-        });
-})
+    })
 
 
 module.exports = router
